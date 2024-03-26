@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'react-router-dom';
 
 import Home from './pages/home';
+import Cart from './pages/cart';
+import Checkout from './pages/checkout';
 
 function App() {
 
@@ -9,18 +11,21 @@ function App() {
     {
       path: "/",
       element: <Home />,
+
+      children: [
+        {
+          path: "/cart",
+          element: <Cart />,
+        },
+        {
+          path: "/checkout",
+          element: <Checkout />,
+        },
+      ]
     },
     {
       path: "/search",
       element: <Home />,
-    },
-    {
-      path: "/cart",
-      element: <div><h1>Cart</h1></div>,
-    },
-    {
-      path: "/checkout",
-      element: <div><h1>Checkout</h1></div>,
     },
   ]);
 

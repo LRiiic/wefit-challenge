@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import CartIcon from "../UI/SVG/cartIcon.svg";
-
+import { useCart } from "../../hooks/useCart";
+import { useNavigate } from "react-router-dom";
 
 const Nav = styled.nav({
     width: "100%",
@@ -19,6 +20,7 @@ const Nav = styled.nav({
     },
 
     ".cart": {
+        cursor: "pointer",
         display: "flex",
         alignItems: "center",
         gap: "8px",
@@ -52,12 +54,15 @@ const Nav = styled.nav({
 });
 
 const Header: React.FC = () => {
+    const { getCart, setCartItemsCount, cartItemsCount } = useCart(() => setCartItemsCount(getCart().length));
+
+    const navigate = useNavigate();
 
     return (
         <Nav>
             <h1 className="title">WeMovies</h1>
-            <div className="cart">
-                <p>Meu Carrinho <span>0 itens</span></p>
+            <div className="cart" onClick={() => navigate("/cart")}>
+                <p>Meu Carrinho <span>{cartItemsCount} itens</span></p>
                 <i></i>
             </div>
         </Nav>

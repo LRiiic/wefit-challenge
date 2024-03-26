@@ -6,9 +6,10 @@ import CardGrid from '../../components/CardGrid/CardGrid';
 
 import Loading from '../../components/Loading/Loading';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
+import MessagePage from '../../components/MessagePage/MessagePage';
 const Home: React.FC = () => {
-
+    const location = useLocation();
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
@@ -41,20 +42,26 @@ const Home: React.FC = () => {
     return (
         <Wrapper>
             <Header/>
-            <SearchBar
-                searchKeyword={searchKeyword}
-                setSearchKeyword={setSearchKeyword}
-                fetchProducts={fetchProducts}
-            />
 
-            { error && <p>{error}</p>}
+            {location.pathname === "/" || location.pathname === "/search" ?
+                <>
+                    <SearchBar
+                        searchKeyword={searchKeyword}
+                        setSearchKeyword={setSearchKeyword}
+                        fetchProducts={fetchProducts}
+                    />
 
-            { loading && <Loading/> }
-            { !loading && 
-            <>
-                <CardGrid products={products}/> 
-            </>
-            }
+                    { error && <MessagePage message="Parece que não há nada por aqui :(" type="error" />}
+
+                    { loading && <Loading/> }
+                    { !loading && 
+                    <>
+                        <CardGrid products={products}/> 
+                    </>
+                    }
+                </>
+            : <Outlet/>}
+        
             
         </Wrapper>
     );

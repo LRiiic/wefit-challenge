@@ -16,4 +16,5 @@ body {
 #root {
   background-color: #2F2E41;
   color: #FFFFFF;
+  min-height: 100vh;
 }

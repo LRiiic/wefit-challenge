@@ -4,17 +4,27 @@ import { Wrapper } from '../../components/Wrapper/Wrapper';
 import Header from '../../components/Header/Header';
 import CardGrid from '../../components/CardGrid/CardGrid';
 
+import Loading from '../../components/Loading/Loading';
+import Error from '../../components/Error/Error';
 const Home: React.FC = () => {
 
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
 
-    async function fetchProducts(): Promise<Product[]> {
-        const response = await fetch('http://localhost:3000/products');
-        const data = await response.json();
-
-        setProducts(data);
-
-        return data;
+    async function fetchProducts(): Promise<Product[] | void> {
+        setLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/products');
+            const data = await response.json();
+            setProducts(data);
+            return data;
+        } catch (error: any) {
+            setError(error.message);
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -25,9 +35,11 @@ const Home: React.FC = () => {
         <Wrapper>
             <Header/>
 
-            { products.length === 0 && <p>Loading...</p> }
+            { loading && <Loading/> }
 
-            { products.length > 0 && <CardGrid products={products}/> }
+            { error && products.length === 0 && <Error/> }
+
+            { !loading && !error && <CardGrid products={products}/> }
             
         </Wrapper>
     );
